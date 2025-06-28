@@ -76,6 +76,25 @@
         cursor: pointer;
         z-index: 999;
       }
+
+      .ratio-wrapper {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+        background: #000;
+        overflow: hidden;
+        border-radius: 8px;
+      }
+
+      .ratio-wrapper img,
+      .ratio-wrapper video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
     </style>
   </head>
   <body>
@@ -114,41 +133,52 @@
       const popupSlider = document.getElementById("popupSlider");
       const closeModal = document.getElementById("closeModal");
 
+      // Stop and reset all videos
       function stopAllVideos() {
         popupSlider.querySelectorAll("video").forEach((video) => {
-          video.pause();
+          if (!video.paused) {
+            video.pause();
+          }
           video.currentTime = 0;
         });
       }
 
+      // Check if slick is initialized
       function isSlickInitialized(el) {
         return $(el).hasClass("slick-initialized");
       }
 
       mediaItems.forEach((item) => {
         item.addEventListener("click", () => {
-          // Only unslick if already initialized
+          // Destroy existing slick if any
           if (isSlickInitialized("#popupSlider")) {
             $("#popupSlider").slick("unslick");
           }
 
-          popupSlider.innerHTML = ""; // Clear slider content
+          popupSlider.innerHTML = ""; // Clear all slides
 
-          // Rebuild slider content
+          // Rebuild all gallery items as slides
           mediaItems.forEach((gItem) => {
             const type = gItem.dataset.type;
             const src = gItem.dataset.src;
             let slide;
 
             if (type === "image") {
-              slide = `<div><img src="${src}" /></div>`;
+              slide = `
+                <div>
+                  <div class="ratio-wrapper">
+                    <img data-lazy="${src}" alt="Gallery Image" />
+                  </div>
+                </div>`;
             } else if (type === "video") {
               slide = `
-          <div>
-            <video controls preload="metadata">
-              <source src="${src}" type="video/mp4" />
-            </video>
-          </div>`;
+                <div>
+                  <div class="ratio-wrapper">
+                    <video controls preload="none" muted style="width: 100%;">
+                      <source src="${src}" type="video/mp4" />
+                    </video>
+                  </div>
+                </div>`;
             }
 
             popupSlider.insertAdjacentHTML("beforeend", slide);
@@ -156,25 +186,37 @@
 
           modal.classList.add("active");
 
+          // Initialize Slick with loop + lazy load
           $("#popupSlider").slick({
             dots: true,
             arrows: true,
-            infinite: false,
+            infinite: true,
             adaptiveHeight: true,
+            lazyLoad: "ondemand",
           });
 
+          // Handle slide change (play current video)
           $("#popupSlider").on("afterChange", function (event, slick, currentSlide) {
             stopAllVideos();
-            const current = popupSlider.querySelectorAll(".slick-slide")[currentSlide];
-            const video = current.querySelector("video");
-            if (video) video.play();
+            const allSlides = popupSlider.querySelectorAll(".slick-slide");
+            const current = allSlides[currentSlide];
+            const video = current?.querySelector("video");
+            if (video) {
+              video.play().catch((err) => {
+                if (err.name !== "AbortError") {
+                  console.warn("Video play error:", err);
+                }
+              });
+            }
           });
 
+          // Go to the clicked item
           const startIndex = Array.from(mediaItems).indexOf(item);
           $("#popupSlider").slick("slickGoTo", startIndex);
         });
       });
 
+      // Handle modal close
       closeModal.addEventListener("click", () => {
         stopAllVideos();
         if (isSlickInitialized("#popupSlider")) {
