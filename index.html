@@ -1,174 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Popup SlickSlider Modal</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Popup SlickSlider Modal</title>
 
-  <!-- Slick Slider CSS (CDN) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
+    <!-- Slick Slider CSS (CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
 
-  <style>
-    body { font-family: sans-serif; }
+    <style>
+      body {
+        font-family: sans-serif;
+      }
 
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+      .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
 
-    .gallery-item {
-      width: 200px;
-      cursor: pointer;
-    }
+      .gallery-item {
+        width: 200px;
+        cursor: pointer;
+      }
 
-    .gallery-item video,
-    .gallery-item img {
-      width: 100%;
-      height: auto;
-      border: 2px solid #ccc;
-      border-radius: 6px;
-    }
+      .gallery-item video,
+      .gallery-item img {
+        width: 100%;
+        height: auto;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+      }
 
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
 
-    .modal.active { display: flex; }
+      .modal.active {
+        display: flex;
+      }
 
-    .modal-content {
-      width: 90%;
-      max-width: 800px;
-      background: #000;
-      border-radius: 8px;
-      padding: 10px;
-      position: relative;
-    }
+      .modal-content {
+        width: 90%;
+        max-width: 800px;
+        background: #000;
+        border-radius: 8px;
+        padding: 10px;
+        position: relative;
+      }
 
-    .modal-content video,
-    .modal-content img {
-      width: 100%;
-      max-height: 80vh;
-      object-fit: contain;
-    }
+      .modal-content video,
+      .modal-content img {
+        width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+      }
 
-    .close-modal {
-      position: absolute;
-      top: 10px; right: 15px;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-      z-index: 999;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="gallery">
-    <div class="gallery-item" data-type="image" data-src="https://images.pexels.com/photos/943092/pexels-photo-943092.jpeg?cs=srgb&dl=code-coding-connection-943092.jpg&fm=jpg">
-      <img src="https://images.pexels.com/photos/943092/pexels-photo-943092.jpeg?cs=srgb&dl=code-coding-connection-943092.jpg&fm=jpg" alt="Image 1">
+      .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="gallery">
+      <div class="gallery-item" data-type="image" data-src="https://images.pexels.com/photos/943092/pexels-photo-943092.jpeg?cs=srgb&dl=code-coding-connection-943092.jpg&fm=jpg">
+        <img src="https://images.pexels.com/photos/943092/pexels-photo-943092.jpeg?cs=srgb&dl=code-coding-connection-943092.jpg&fm=jpg" alt="Image 1" />
+      </div>
+      <div class="gallery-item" data-type="video" data-src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4">
+        <video src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" muted></video>
+      </div>
+      <div class="gallery-item" data-type="image" data-src="https://images.pexels.com/photos/945059/pexels-photo-945059.jpeg?cs=srgb&dl=code-coding-connection-945059.jpg&fm=jpg">
+        <img src="https://images.pexels.com/photos/945059/pexels-photo-945059.jpeg?cs=srgb&dl=code-coding-connection-945059.jpg&fm=jpg" alt="Image 2" />
+      </div>
+      <div class="gallery-item" data-type="video" data-src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4">
+        <video src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" muted></video>
+      </div>
     </div>
-    <div class="gallery-item" data-type="video" data-src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4">
-      <video src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" muted></video>
+
+    <!-- Modal -->
+    <div class="modal" id="mediaModal">
+      <div class="modal-content">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <div class="slider" id="popupSlider"></div>
+      </div>
     </div>
-    <div class="gallery-item" data-type="image" data-src="https://images.pexels.com/photos/945059/pexels-photo-945059.jpeg?cs=srgb&dl=code-coding-connection-945059.jpg&fm=jpg">
-      <img src="https://images.pexels.com/photos/945059/pexels-photo-945059.jpeg?cs=srgb&dl=code-coding-connection-945059.jpg&fm=jpg" alt="Image 2">
-    </div>
-    <div class="gallery-item" data-type="video" data-src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4">
-      <video src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" muted></video>
-    </div>
-  </div>
 
-  <!-- Modal -->
-  <div class="modal" id="mediaModal">
-    <div class="modal-content">
-      <span class="close-modal" id="closeModal">&times;</span>
-      <div class="slider" id="popupSlider"></div>
-    </div>
-  </div>
+    <!-- jQuery (CDN) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <!-- jQuery (CDN) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Slick JS (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
-  <!-- Slick JS (CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+      const mediaItems = document.querySelectorAll(".gallery-item");
+      const modal = document.getElementById("mediaModal");
+      const popupSlider = document.getElementById("popupSlider");
+      const closeModal = document.getElementById("closeModal");
 
-  <script>
-    const mediaItems = document.querySelectorAll('.gallery-item');
-    const modal = document.getElementById('mediaModal');
-    const popupSlider = document.getElementById('popupSlider');
-    const closeModal = document.getElementById('closeModal');
+      function stopAllVideos() {
+        popupSlider.querySelectorAll("video").forEach((video) => {
+          video.pause();
+          video.currentTime = 0;
+        });
+      }
 
-    function stopAllVideos() {
-      popupSlider.querySelectorAll('video').forEach(video => {
-        video.pause();
-        video.currentTime = 0;
-      });
-    }
+      function isSlickInitialized(el) {
+        return $(el).hasClass("slick-initialized");
+      }
 
-    mediaItems.forEach(item => {
-      item.addEventListener('click', () => {
-        // Clear existing slider content
-        $('#popupSlider').slick('unslick');
-        popupSlider.innerHTML = '';
-
-        // Collect all gallery media into the slider
-        mediaItems.forEach(gItem => {
-          const type = gItem.dataset.type;
-          const src = gItem.dataset.src;
-          let slide;
-
-          if (type === 'image') {
-            slide = `<div><img src="${src}" /></div>`;
-          } else if (type === 'video') {
-            slide = `
-              <div>
-                <video controls preload="metadata">
-                  <source src="${src}" type="video/mp4" />
-                </video>
-              </div>`;
+      mediaItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          // Only unslick if already initialized
+          if (isSlickInitialized("#popupSlider")) {
+            $("#popupSlider").slick("unslick");
           }
 
-          popupSlider.insertAdjacentHTML('beforeend', slide);
+          popupSlider.innerHTML = ""; // Clear slider content
+
+          // Rebuild slider content
+          mediaItems.forEach((gItem) => {
+            const type = gItem.dataset.type;
+            const src = gItem.dataset.src;
+            let slide;
+
+            if (type === "image") {
+              slide = `<div><img src="${src}" /></div>`;
+            } else if (type === "video") {
+              slide = `
+          <div>
+            <video controls preload="metadata">
+              <source src="${src}" type="video/mp4" />
+            </video>
+          </div>`;
+            }
+
+            popupSlider.insertAdjacentHTML("beforeend", slide);
+          });
+
+          modal.classList.add("active");
+
+          $("#popupSlider").slick({
+            dots: true,
+            arrows: true,
+            infinite: false,
+            adaptiveHeight: true,
+          });
+
+          $("#popupSlider").on("afterChange", function (event, slick, currentSlide) {
+            stopAllVideos();
+            const current = popupSlider.querySelectorAll(".slick-slide")[currentSlide];
+            const video = current.querySelector("video");
+            if (video) video.play();
+          });
+
+          const startIndex = Array.from(mediaItems).indexOf(item);
+          $("#popupSlider").slick("slickGoTo", startIndex);
         });
-
-        modal.classList.add('active');
-
-        $('#popupSlider').slick({
-          dots: true,
-          arrows: true,
-          infinite: false,
-          adaptiveHeight: true
-        });
-
-        // Play video when slide is shown
-        $('#popupSlider').on('afterChange', function(event, slick, currentSlide){
-          stopAllVideos();
-          const current = popupSlider.querySelectorAll('.slick-slide')[currentSlide];
-          const video = current.querySelector('video');
-          if (video) video.play();
-        });
-
-        // Start with clicked item's index
-        const startIndex = Array.from(mediaItems).indexOf(item);
-        $('#popupSlider').slick('slickGoTo', startIndex);
       });
-    });
 
-    closeModal.addEventListener('click', () => {
-      stopAllVideos();
-      $('#popupSlider').slick('unslick');
-      modal.classList.remove('active');
-    });
-  </script>
-</body>
+      closeModal.addEventListener("click", () => {
+        stopAllVideos();
+        if (isSlickInitialized("#popupSlider")) {
+          $("#popupSlider").slick("unslick");
+        }
+        modal.classList.remove("active");
+      });
+    </script>
+  </body>
 </html>
