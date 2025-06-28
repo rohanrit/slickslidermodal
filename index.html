@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <title>Popup SlickSlider Modal</title>
 
-    <!-- Slick Slider CSS (CDN) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
-
     <style>
       body {
         font-family: sans-serif;
@@ -122,9 +118,11 @@
     </div>
 
     <!-- jQuery (CDN) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
-    <!-- Slick JS (CDN) -->
+    <!-- Slick CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     <script>
@@ -136,9 +134,7 @@
       // Stop and reset all videos
       function stopAllVideos() {
         popupSlider.querySelectorAll("video").forEach((video) => {
-          if (!video.paused) {
-            video.pause();
-          }
+          if (!video.paused) video.pause();
           video.currentTime = 0;
         });
       }
@@ -161,7 +157,7 @@
           mediaItems.forEach((gItem) => {
             const type = gItem.dataset.type;
             const src = gItem.dataset.src;
-            let slide;
+            let slide = "";
 
             if (type === "image") {
               slide = `
@@ -174,7 +170,7 @@
               slide = `
                 <div>
                   <div class="ratio-wrapper">
-                    <video controls preload="none" muted style="width: 100%;">
+                    <video controls preload="none" muted>
                       <source src="${src}" type="video/mp4" />
                     </video>
                   </div>
